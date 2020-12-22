@@ -33,11 +33,11 @@ class RegistrationMenu(Canvas):
 
         # Text indications
         self.id_label_text_id = self.create_text(0.25 * self.gui.width, 0.3 * self.gui.height,
-                                                 text="N°Etudiant", font=('helvetica', 24), anchor="nw")
+                                                 text=gui.language_text[gui.language]['student_number'], font=('helvetica', 24), anchor="nw")
         self.first_name_text_id = self.create_text(0.25 * self.gui.width, 0.4 * self.gui.height,
-                                                   text="Prénom", font=('helvetica', 24), anchor="nw")
+                                                   text=gui.language_text[gui.language]['name'], font=('helvetica', 24), anchor="nw")
         self.last_name_text_id = self.create_text(0.25 * self.gui.width, 0.5 * self.gui.height,
-                                                  text="Nom", font=('helvetica', 24), anchor="nw")
+                                                  text=gui.language_text[gui.language]['last_name'], font=('helvetica', 24), anchor="nw")
 
         self.error_message_id = self.create_text(0.4 * self.gui.width, 0.35 * self.gui.height,
                                                  text="L'identifiant doit contenir 8 chiffres",

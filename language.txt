@@ -4,20 +4,26 @@
        "registration_button" : "Je veux m'enregistrer",
        "recognition_button" : "Consulter mon EDT\n(Je suis deja enregistre)",
        "name" : "Prénom",
-       "last_name" : "Nom"
+       "last_name" : "Nom",
+       "student_number": "N°Etudiant",
+       "error_message": "L'identifiant doit contenir 8 chiffres"
     },
     "en" : {
         "title" : "My Schedule",
         "registration_button" : "Register",
         "recognition_button" : "Consult my Schedule\n(Already registered)",
         "name" : "Name",
-        "last_name" : "Last Name"
+        "last_name" : "Last Name",
+        "student_number": "Student N°",
+        "error_message": "ID must contains 8 numbers"
     },
     "es" : {
         "title" : "Mi agenda",
         "registration_button" : "Registrar",
         "recognition_button" : "Recognar",
         "name" : "Nombre",
-        "last_name" : "Apellido"
+        "last_name" : "Apellido",
+        "student_number": "N°Estudiante",
+        "error_message": "El identificador debe contener 8 dígitos"
     }
 }

@@ -3,6 +3,7 @@ from model.touch_keyboard import TouchKeyboard
 from view.recognition_menu import RecognitionMenu
 from model.resizable_image import ResizableImage
 from view.start_menu import StartMenu
+from controller.language_controller import LanguageController
 from tkinter import *
 import json
 

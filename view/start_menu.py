@@ -1,4 +1,5 @@
 from controller.start_menu_controller import StartMenuController
+from controller.language_controller import LanguageController
 from model.round_button import RoundButton
 from tkinter import Canvas
 
@@ -11,7 +12,7 @@ class StartMenu(Canvas):
 
         # Initializing the controller
         self.controller = StartMenuController(self.gui)
-
+        self.language_controller = LanguageController(self.gui)
 
         # Styling elements
         self.background_id = self.create_image(0, 0, image=self.gui.background_image, anchor="nw")
@@ -58,7 +59,7 @@ class StartMenu(Canvas):
                                            radius=40,
                                            image=self.gui.french_button_image,
                                            image_on_click=self.gui.french_button_on_click_image,
-                                           command=self.controller.change_language)
+                                           command=self.language_controller.change_language)
 
     def display(self):
         self.pack(expand='yes')
