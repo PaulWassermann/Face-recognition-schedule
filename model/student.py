@@ -40,6 +40,7 @@ class Student:
             self.__first_name = first_name.capitalize()
 
     def get_last_name(self):
+        """Return last name"""
         return self.__last_name
 
     def set_last_name(self, last_name):
