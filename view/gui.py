@@ -8,9 +8,7 @@ import json
 
 
 class GUI:
-    '''The gui model holds the attributes related to the application in general
-
-    '''
+    '''The gui model holds the attributes related to the application in general'''
 
     def __init__(self):
 
@@ -66,7 +64,7 @@ class GUI:
 
     #Face registered's data
     def load_database(self):
-
+        """"Load face database"""
         try:
             with open("Database.txt", 'r') as file:
                 self.database = json.load(file)
@@ -76,6 +74,7 @@ class GUI:
     #Text for each language
 
     def load_language(self):
+        """"Load different text"""
         try:
             with open("language.txt", 'r') as file:
 
@@ -86,7 +85,7 @@ class GUI:
 
     #Icons's loading
     def load_assets(self):
-
+        """Load assets"""
         self.background_resizable_image = ResizableImage(path_to_image="assets/background.png")
         self.background_image = self.background_resizable_image.resize_to_tk(width=(1228 ** 2) // self.width,
                                                                              height=(691 ** 2) // self.height)

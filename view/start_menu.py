@@ -12,7 +12,7 @@ class StartMenu(Canvas):
         # Initializing the controller
         self.controller = StartMenuController(self.gui)
 
-        language = 'fr'
+        language = 'en'
 
         # Styling elements
         self.background_id = self.create_image(0, 0, image=self.gui.background_image, anchor="nw")

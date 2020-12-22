@@ -20,7 +20,7 @@ class StartMenuController:
         elif self.gui.language == 'fr':
             self.gui.language = 'en'
 
-        self.gui.start_menu.itemconfigure(registration_button,text=self.gui.language_text[self.gui.language]['recognition_button'])
+        gui.root.update()
         print(self.gui.language)
 
 

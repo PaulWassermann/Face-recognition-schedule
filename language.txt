@@ -1,14 +1,20 @@
 {
     "fr" : {
        "registration_button" : "Je veux m'enregistrer",
-       "recognition_button" : "Consulter mon EDT\n(Je suis déjà enregistré)"
+       "recognition_button" : "Consulter mon EDT\n(Je suis deja enregistre)"
+       "name" : "Prénom"
+       "last_name" : "Nom"
     },
     "en" : {
         "registration_button" : "Register",
         "recognition_button" : "Consult my Schedule\n(Already registered)"
+        "name" : "Name"
+        "last_name" : "Last Name"
     },
     "es" : {
         "registration_button" : "",
         "recognition_button" : ""
+        "name" : "Nombre"
+        "last_name" : "Apellido"
     }
 }
