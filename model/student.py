@@ -44,7 +44,7 @@ class Student:
         return self.__last_name
 
     def set_last_name(self, last_name):
-
+        """Change last_name"""
         if "-" in last_name:
             elements = last_name.split("-")
 
@@ -70,13 +70,15 @@ class Student:
         self.__last_name = last_name
 
     def get_face_encoding(self):
+        """Return face_encoding"""
         return self.__face_encoding
 
     def set_face_encoding(self, image):
+        """Change face enconding"""
         self.__face_encoding = list(face_encodings(image)[0])
 
     def get_schedule(self):
-
+        """Return schedule from serenade"""
         try:
             request = get(f"https://serenade.centrale-marseille.fr/utilisateurs/livecal/"
                           f"{self.__last_name}/{self.__first_name}")
