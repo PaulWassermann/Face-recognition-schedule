@@ -1,19 +1,22 @@
 {
     "fr" : {
+       "title" : "Mon Emploi du Temps",
        "registration_button" : "Je veux m'enregistrer",
        "recognition_button" : "Consulter mon EDT\n(Je suis deja enregistre)",
        "name" : "Prénom",
        "last_name" : "Nom"
     },
     "en" : {
+        "title" : "My Schedule",
         "registration_button" : "Register",
         "recognition_button" : "Consult my Schedule\n(Already registered)",
         "name" : "Name",
         "last_name" : "Last Name"
     },
     "es" : {
-        "registration_button" : "",
-        "recognition_button" : "",
+        "title" : "Mi agenda",
+        "registration_button" : "Registrar",
+        "recognition_button" : "Recognar",
         "name" : "Nombre",
         "last_name" : "Apellido"
     }

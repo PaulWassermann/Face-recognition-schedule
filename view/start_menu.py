@@ -12,7 +12,6 @@ class StartMenu(Canvas):
         # Initializing the controller
         self.controller = StartMenuController(self.gui)
 
-        language = 'fr'
 
         # Styling elements
         self.background_id = self.create_image(0, 0, image=self.gui.background_image, anchor="nw")
@@ -52,7 +51,7 @@ class StartMenu(Canvas):
                                               image_on_click=self.gui.schedule_button_on_click_image,
                                               command=self.controller.recognition_button_command)
 
-        self.language_choice = RoundButton(canvas=self,
+        self.language_button = RoundButton(canvas=self,
                                            gui=self.gui,
                                            x=0.95 * self.gui.width,
                                            y=0.92 * self.gui.height,
@@ -60,7 +59,6 @@ class StartMenu(Canvas):
                                            image=self.gui.french_button_image,
                                            image_on_click=self.gui.french_button_on_click_image,
                                            command=self.controller.change_language)
-        self.language = 'fr'
 
     def display(self):
         self.pack(expand='yes')

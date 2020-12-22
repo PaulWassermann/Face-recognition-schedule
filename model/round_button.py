@@ -13,6 +13,7 @@ class RoundButton:
         self.y = y
         self.radius = radius
         self.text = text
+        self.text_id = 0
 
         if font is None:
             font = ("helvetica", 16)
@@ -59,7 +60,7 @@ class RoundButton:
         self.image_id = self.canvas.create_image(x0, y0, image=self.image, anchor="center")
 
         if self.text != "":
-            self.canvas.create_text(x0, y0 + int(3 * self.radius / 5), text=self.text, font=self.font,
+            self.text_id = self.canvas.create_text(x0, y0 + int(3 * self.radius / 5), text=self.text, font=self.font,
                                     fill=self.text_color, justify=self.justify, anchor="center")
 
     def on_click(self, event):
@@ -79,3 +80,6 @@ class RoundButton:
                 self.command()
 
             self.pressed = False
+
+    def update_text(self, text):
+        self.canvas.itemconfigure(self.text_id, text=text)

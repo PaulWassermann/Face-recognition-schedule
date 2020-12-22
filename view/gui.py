@@ -24,7 +24,7 @@ class GUI:
         self.root.geometry(f'{self.width}x{self.height}+{int((self.root.winfo_screenwidth() - self.width) / 2)}+'
                            + f'{- 50 + int((self.root.winfo_screenheight() - self.height) / 2)}')
         self.root.resizable(width=False, height=False)
-        self.root.overrideredirect(boolean=True)
+        self.root.overrideredirect(boolean=False) # False while debugging
         self.root.config(bg='white')
 
         # Loading database
