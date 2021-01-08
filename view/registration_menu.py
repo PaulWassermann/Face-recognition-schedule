@@ -1,13 +1,12 @@
 from controller.registration_menu_controller import RegistrationMenuController
 from face_recognition import face_locations, face_encodings, compare_faces
-from model.round_button import RoundButton
+from view.round_button import RoundButton
 from model.student import Student
 from PIL import ImageTk
 from time import time
 from tkinter import *
 import cv2
 import PIL
-import numpy
 
 
 class RegistrationMenu(Canvas):

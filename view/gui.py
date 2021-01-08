@@ -2,9 +2,9 @@ from view.administrator_log_in import AdministratorLogIn
 from view.language_selection import LanguageSelection
 from view.registration_menu import RegistrationMenu
 from view.recognition_menu import RecognitionMenu
-from model.resizable_image import ResizableImage
+from view.resizable_image import ResizableImage
 from view.parameters_menu import ParametersMenu
-from model.touch_keyboard import TouchKeyboard
+from view.touch_keyboard import TouchKeyboard
 from view.start_menu import StartMenu
 from model.log import Log
 from tkinter import *

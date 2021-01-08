@@ -1,5 +1,5 @@
 from controller.administrator_log_in_controller import AdministratorLogInController
-from model.round_button import RoundButton
+from view.round_button import RoundButton
 from hashlib import sha256
 from tkinter import *
 

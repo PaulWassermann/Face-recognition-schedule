@@ -1,6 +1,6 @@
 from controller.language_selection_controller import LanguageSelectionController
 from controller.start_menu_controller import StartMenuController
-from model.round_button import RoundButton
+from view.round_button import RoundButton
 from tkinter import Canvas
 
 

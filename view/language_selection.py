@@ -1,5 +1,5 @@
 from controller.language_selection_controller import LanguageSelectionController
-from model.round_button import RoundButton
+from view.round_button import RoundButton
 from tkinter import Canvas, Frame
 
 

@@ -1,4 +1,4 @@
-from model.resizable_image import ResizableImage
+from view.resizable_image import ResizableImage
 from tkinter import Frame, Button, BooleanVar
 
 

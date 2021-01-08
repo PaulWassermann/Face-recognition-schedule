@@ -1,5 +1,5 @@
 from controller.parameters_menu_controller import ParametersMenuController
-from model.round_button import RoundButton
+from view.round_button import RoundButton
 from tkinter import *
 
 

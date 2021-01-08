@@ -1,6 +1,6 @@
 from controller.recognition_menu_controller import RecognitionMenuController
 from face_recognition import face_locations, face_encodings, compare_faces
-from model.round_button import RoundButton
+from view.round_button import RoundButton
 from model.student import Student
 from PIL import ImageTk
 from time import time
