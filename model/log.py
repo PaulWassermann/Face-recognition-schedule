@@ -7,11 +7,15 @@ monthTranslationDict = {'January': 'Janvier', 'February': 'Février', 'March': '
                         'June': 'Juin', 'July': 'Juillet', 'August': 'Août', 'September': 'Septembre',
                         'October': 'Octobre', 'November': 'Novembre', 'December': 'Décembre'}
 
+# This class allows us to write to the specified file every errors occurring while the application is running
+# Useful when debugging
+
 
 class Log:
 
     def __init__(self):
 
+        # Attributes related to time
         self.time = datetime.datetime.now()
         self.year = self.time.strftime("%Y")
         self.month = monthTranslationDict[self.time.strftime("%B")]
@@ -20,15 +24,19 @@ class Log:
         self.minute = self.time.strftime("%M")
         self.second = self.time.strftime("%S")
 
+        # Allows us to know if we're writing to a new file
         self.new = False
 
+        # Path to the log file
         self.dirs = f"Log\\{self.month} {self.year}"
         self.pathname = self.dirs + f"\\{self.dayOfTheMonth}.txt"
 
+        # Verify is the log file of the day already exists
         self.check_on_log_path()
 
         logger = logging.getLogger()
 
+        # If not already done, we format the output written in our file
         if not logger.hasHandlers():
 
             self.fileHandler = logging.FileHandler(filename=self.pathname, mode='a')

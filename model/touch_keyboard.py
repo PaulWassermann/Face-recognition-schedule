@@ -2,6 +2,9 @@ from model.resizable_image import ResizableImage
 from tkinter import Frame, Button, BooleanVar
 
 
+# This class creates a working touch keyboard
+
+
 class TouchKeyboard(Frame):
 
     def __init__(self, gui):
@@ -11,6 +14,8 @@ class TouchKeyboard(Frame):
         self.height = 0.4 * self.gui.height
 
         super().__init__(self.gui.root, width=self.width, height=self.height, bg="white")
+        self.place(x=self.gui.width // 2, y=self.gui.height - 1.05 * self.height, anchor="n")
+        self.lower()
 
         self.keyboard_frame_1_upper = Frame(self, width=self.width, height=self.height, bg="white")
 
@@ -82,7 +87,7 @@ class TouchKeyboard(Frame):
                                       ["slash", [["vertical_bar", "backslash"]]],
                                       "_",
                                       ["€", [["£", "¥", "₩"]]],
-                                     "$", "lesser_than", "greater_than"],
+                                      "$", "lesser_than", "greater_than"],
                                      [["!", ["¡"]],
                                       "@", "#", "%", "^", "&", "asterisk", "°",
                                       ["(", [["[", "{"]]],
@@ -100,7 +105,7 @@ class TouchKeyboard(Frame):
                                       ["slash", [["vertical_bar", "backslash"]]],
                                       "_",
                                       ["€", [["£", "¥", "₩"]]],
-                                     "$", "lesser_than", "greater_than"],
+                                      "$", "lesser_than", "greater_than"],
                                      [["!", ["¡"]],
                                       "@", "#", "%", "^", "&", "asterisk", "°",
                                       ["(", [["[", "{"]]],
@@ -133,6 +138,7 @@ class TouchKeyboard(Frame):
         self.entry = None
         self.active_keyboard = "1"
         self.capitalization = "upper"
+        self.caps_lock = False
         self.id_after_complex_key = 0
         self.active_complex_key = BooleanVar(value=False)
         self.active_complex_key_frame = None
@@ -330,20 +336,30 @@ class TouchKeyboard(Frame):
 
     def toggle_shift(self, only_if_inactive=False):
 
-        if self.capitalization == "upper":
+        if not self.caps_lock:
 
-            if not only_if_inactive:
-                self.capitalization = "lower"
+            if self.capitalization == "upper":
 
-        else:
-            self.capitalization = "upper"
+                if not only_if_inactive:
+                    self.capitalization = "lower"
 
-        self.keyboard_frames[self.active_keyboard][self.capitalization].tkraise()
+            else:
+                self.capitalization = "upper"
 
-        if self.active_complex_key.get():
-            self.toggle_complex_key()
-            self.active_complex_key_frame[1][1] = self.capitalization
-            self.toggle_complex_key(*self.active_complex_key_frame[1])
+            self.keyboard_frames[self.active_keyboard][self.capitalization].tkraise()
+
+            if self.active_complex_key.get():
+                self.toggle_complex_key()
+                self.active_complex_key_frame[1][1] = self.capitalization
+                self.toggle_complex_key(*self.active_complex_key_frame[1])
+
+    def toggle_caps_lock(self):
+
+        if self.caps_lock:
+            self.caps_lock = False
+
+        elif not self.caps_lock:
+            self.caps_lock = False
 
     def toggle_keyboards(self):
 
@@ -417,6 +433,7 @@ class TouchKeyboard(Frame):
                 self.active_complex_key_frame[0].place(
                     x=self.winfo_x() + (1 + l) * self.key_gap + int((1 / 2 + l) * self.key_width),
                     y=self.winfo_y() + (1 + k) * self.row_gap + int((k - 1 / 4) * self.key_height), anchor="s")
+                self.active_complex_key_frame[0].tkraise()
 
                 self.gui.root.wait_variable(self.active_complex_key)
                 self.active_complex_key_frame[0].place_forget()
@@ -434,15 +451,20 @@ class TouchKeyboard(Frame):
 
         self.entry = event.widget
 
+        if self.entry.index("insert") == 0 and len(self.entry.get()) == 0:
+            self.capitalization = "upper"
+
+        else:
+            self.capitalization = "lower"
+
         self.keyboard_frames[self.active_keyboard][self.capitalization].tkraise()
 
-        self.place(x=self.gui.width // 2, y=self.gui.height - 1.05 * self.height, anchor="n")
+        self.tkraise()
 
     def hide(self):
 
         self.toggle_complex_key(only_if_active=True)
 
         self.active_keyboard = "1"
-        self.capitalization = "upper"
 
-        self.place_forget()
+        self.lower()

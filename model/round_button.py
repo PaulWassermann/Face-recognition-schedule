@@ -1,3 +1,4 @@
+from model.resizable_image import ResizableImage
 from math import sqrt
 
 
@@ -27,8 +28,15 @@ class RoundButton:
         self.font = font
         self.text_color = text_color
         self.justify = justify
-        self.image = image
-        self.image_on_click = image_on_click
+
+        if isinstance(image, ResizableImage):
+            self.image = image.resize_to_tk(width= 2 * self.radius)
+            self.image_on_click = image_on_click.resize_to_tk(width= 2 * self.radius)
+
+        else:
+            self.image = image
+            self.image_on_click = image_on_click
+
         self.command = command
 
         self.circle_id = 0
@@ -47,21 +55,21 @@ class RoundButton:
 
     def shape(self):
 
-        x0 = self.x
-        y0 = self.y
-        x1 = self.x + 2 * self.radius
-        y1 = self.y + 2 * self.radius
+        x0 = self.x - self.radius
+        y0 = self.y - self.radius
+        x1 = self.x + self.radius
+        y1 = self.y + self.radius
         fill = ""
 
         if self.image is None:
             fill = "white"
 
         self.circle_id = self.canvas.create_oval(x0, y0, x1, y1, outline="", fill=fill)
-        self.image_id = self.canvas.create_image(x0, y0, image=self.image, anchor="center")
+        self.image_id = self.canvas.create_image(self.x, self.y, image=self.image, anchor="center")
 
         if self.text != "":
-            self.text_id = self.canvas.create_text(x0, y0 + int(3 * self.radius / 5), text=self.text, font=self.font,
-                                    fill=self.text_color, justify=self.justify, anchor="center")
+            self.text_id = self.canvas.create_text(self.x, self.y + int(3 * self.radius / 5), text=self.text, font=self.font,
+                                                   fill=self.text_color, justify=self.justify, anchor="center")
 
     def on_click(self, event):
 
@@ -83,3 +91,16 @@ class RoundButton:
 
     def update_text(self, text):
         self.canvas.itemconfigure(self.text_id, text=text)
+
+    def update_image(self, image, image_on_click):
+
+        if isinstance(image, ResizableImage):
+            self.image = image.resize_to_tk(width= 2 * self.radius)
+            self.image_on_click = image_on_click.resize_to_tk(width= 2 * self.radius)
+
+        else:
+            self.image = image
+            self.image_on_click = image_on_click
+
+        self.canvas.itemconfigure(self.image_id, image=self.image)
+

@@ -19,8 +19,8 @@ class RecognitionMenu(Canvas):
         # Initializing the controller
         self.controller = RecognitionMenuController(self.gui)
 
-        self.background = self.gui.background_resizable_image.resize_to_tk(width=int(0.3 * self.gui.width),
-                                                                           height=self.gui.height)
+        self.background = self.gui.background_image.resize_to_tk(width=int(0.3 * self.gui.width),
+                                                                 height=self.gui.height)
 
         self.background_id = self.create_image(0, 0,
                                                image=self.background,
@@ -82,15 +82,17 @@ class RecognitionMenu(Canvas):
 
             for (top, right, bottom, left), face_encoding in zip(locations, encodings):
 
-                matches = compare_faces([self.gui.database[key][2] for key in self.gui.database], face_encoding)
+                matches = []
+
+                for key in self.gui.database:
+                    matches += compare_faces([self.gui.database[key][2]], face_encoding)
 
                 if True in matches:
-                    keys = list(self.gui.database.keys())
-                    first_match_index = matches.index(True)
+                    key = list(self.gui.database.keys())[matches.index(True)]
 
-                    student = Student(self.gui, id_=keys[first_match_index],
-                                      first_name=self.gui.database[keys[first_match_index]][0],
-                                      last_name=self.gui.database[keys[first_match_index]][1])
+                    student = Student(self.gui, id_=key,
+                                      first_name=self.gui.database[key][0],
+                                      last_name=self.gui.database[key][1])
 
                     if self.student is None or student != self.student:
                         self.student = student
@@ -108,12 +110,11 @@ class RecognitionMenu(Canvas):
                     cv2.putText(img=frame, text="Unknown", org=(left, top - 10), fontFace=cv2.FONT_HERSHEY_COMPLEX,
                                 fontScale=1, color=(0, 255, 0))
 
-            frame = cv2.resize(frame, (int(0.7 * self.gui.width), self.gui.height), interpolation=cv2.INTER_AREA)
+            frame = cv2.resize(frame, (int(0.72 * self.gui.width), self.gui.height), interpolation=cv2.INTER_AREA)
 
             # Somehow the pixels are stored as BGR so we have to arrange them as RGB
             frame = ImageTk.PhotoImage(image=PIL.Image.fromarray(frame[..., ::-1]))
             self.itemconfigure(self.video_back_id, image=frame)
-            self.update_idletasks()
 
             if (time() - last_calculation) < 1:
                 self.fps = round(1 / (time() - start))
