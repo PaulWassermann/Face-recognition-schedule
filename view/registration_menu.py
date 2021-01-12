@@ -70,13 +70,13 @@ class RegistrationMenu(Canvas):
 
         self.first_name_entry.bind("<FocusOut>",
                                    lambda e: self.itemconfigure(self.required_field_error_message_1, state="normal")
-                                   if len(self.id_entry.get()) == 0 else
+                                   if len(self.first_name_entry.get()) == 0 else
                                    (self.itemconfigure(self.required_field_error_message_1, state="hidden") if
                                     self.itemcget(self.required_field_error_message_1, "state") == "normal" else None))
 
         self.last_name_entry.bind("<FocusOut>",
                                   lambda e: self.itemconfigure(self.required_field_error_message_2, state="normal")
-                                  if len(self.id_entry.get()) == 0 else
+                                  if len(self.last_name_entry.get()) == 0 else
                                   (self.itemconfigure(self.required_field_error_message_2, state="hidden") if
                                    self.itemcget(self.required_field_error_message_2, "state") == "normal" else None))
 

@@ -139,6 +139,7 @@ class TouchKeyboard(Frame):
         self.active_keyboard = "1"
         self.capitalization = "upper"
         self.caps_lock = False
+        self.id_after_caps_lock = 0
         self.id_after_complex_key = 0
         self.active_complex_key = BooleanVar(value=False)
         self.active_complex_key_frame = None
@@ -160,15 +161,35 @@ class TouchKeyboard(Frame):
 
                             if key == "shift":
                                 self.key_images[super_key][capitalization][super_index].append(
-                                    ResizableImage(path_to_image=f"assets/keyboard/{capitalization}/{key}.png").
-                                        resize_to_tk(width=2 * self.key_width + self.key_gap,
-                                                     height=self.key_height))
+                                    [ResizableImage(path_to_image=f"assets/keyboard/{capitalization}/{key}.png").
+                                         resize_to_tk(width=2 * self.key_width + self.key_gap,
+                                                      height=self.key_height),
+                                     ResizableImage(path_to_image=f"assets/keyboard/{capitalization}/caps_lock.png").
+                                         resize_to_tk(width=2 * self.key_width + self.key_gap,
+                                                      height=self.key_height)
+                                     ])
 
                                 self.key_buttons[super_key][capitalization][super_index].append(Button(
                                     self.keyboard_frames[super_key][capitalization],
-                                    image=self.key_images[super_key][capitalization][super_index][index],
+                                    image=self.key_images[super_key][capitalization][super_index][index][0],
                                     anchor="nw", bg="white", relief="flat",
-                                    command=self.toggle_shift))
+                                    command=None))
+
+                                self.key_buttons[super_key][capitalization][super_index][index].bind(
+                                    "<ButtonPress-1>", lambda e:
+                                    self.set_id_after_caps_lock(
+                                        value=self.gui.root.after(800, func=self.toggle_caps_lock))
+                                    if not self.caps_lock
+                                    else self.set_id_after_caps_lock(value=0) if self.id_after_caps_lock == 1 else None)
+
+                                self.key_buttons[super_key][capitalization][super_index][index].bind(
+                                    "<ButtonRelease-1>", lambda e: [self.gui.root.after_cancel(self.id_after_caps_lock)
+                                                                    if not self.caps_lock else None,
+                                                                    self.toggle_shift()
+                                                                    if not self.caps_lock
+                                                                    else self.toggle_caps_lock()
+                                                                    if self.id_after_caps_lock != 1
+                                                                    else None])
 
                             elif key == "backspace":
                                 self.key_images[super_key][capitalization][super_index].append(
@@ -326,6 +347,7 @@ class TouchKeyboard(Frame):
                                                                    m=minor_index,
                                                                    n=super_minor_index:
                                                     [self.active_complex_key.set(value=False),
+                                                     self.active_complex_key_frame[0].place_forget(),
                                                      self.entry.insert(
                                                          self.entry.index("insert"),
                                                          self.formatted_letter(self.keys[i][j][k][l][1][m][n]))])
@@ -336,30 +358,48 @@ class TouchKeyboard(Frame):
 
     def toggle_shift(self, only_if_inactive=False):
 
-        if not self.caps_lock:
+        if self.capitalization == "upper":
 
-            if self.capitalization == "upper":
+            if not only_if_inactive:
+                self.capitalization = "lower"
 
-                if not only_if_inactive:
-                    self.capitalization = "lower"
+        else:
+            self.capitalization = "upper"
 
-            else:
-                self.capitalization = "upper"
+        self.keyboard_frames[self.active_keyboard][self.capitalization].tkraise()
 
-            self.keyboard_frames[self.active_keyboard][self.capitalization].tkraise()
+        if self.active_complex_key.get():
+            self.toggle_complex_key()
+            self.active_complex_key_frame[1][1] = self.capitalization
+            self.toggle_complex_key(*self.active_complex_key_frame[1])
 
-            if self.active_complex_key.get():
-                self.toggle_complex_key()
-                self.active_complex_key_frame[1][1] = self.capitalization
-                self.toggle_complex_key(*self.active_complex_key_frame[1])
+    def set_id_after_caps_lock(self, value=0):
+        self.id_after_caps_lock = value
 
-    def toggle_caps_lock(self):
+    def toggle_caps_lock(self, only_if_true=False):
 
         if self.caps_lock:
             self.caps_lock = False
+            self.id_after_caps_lock = 0
 
-        elif not self.caps_lock:
-            self.caps_lock = False
+            for super_key in self.keys:
+                for capitalization in self.keys[super_key]:
+                    self.key_buttons[super_key][capitalization][3][0].configure(image=
+                                                                                self.key_images[super_key][
+                                                                                    capitalization][3][0][0])
+
+        elif not self.caps_lock and not only_if_true:
+            self.caps_lock = True
+            self.id_after_caps_lock = 1
+            self.toggle_shift(only_if_inactive=True)
+
+            for super_key in self.keys:
+                for capitalization in self.keys[super_key]:
+                    self.key_buttons[super_key][capitalization][3][0].configure(image=
+                                                                                self.key_images[super_key][
+                                                                                    capitalization][3][0][1])
+
+        self.gui.root.update_idletasks()
 
     def toggle_keyboards(self):
 
@@ -401,12 +441,16 @@ class TouchKeyboard(Frame):
 
         elif letter == "vertical_bar":
             letter = "|"
+
         if self.capitalization == "lower":
             return letter
 
         else:
-            self.toggle_complex_key(only_if_active=True)
-            self.toggle_shift()
+
+            if not self.caps_lock:
+                self.toggle_complex_key(only_if_active=True)
+                self.toggle_shift()
+
             return letter
 
     def complex_key_handler(self, i, j, k, l):
@@ -434,9 +478,6 @@ class TouchKeyboard(Frame):
                     x=self.winfo_x() + (1 + l) * self.key_gap + int((1 / 2 + l) * self.key_width),
                     y=self.winfo_y() + (1 + k) * self.row_gap + int((k - 1 / 4) * self.key_height), anchor="s")
                 self.active_complex_key_frame[0].tkraise()
-
-                self.gui.root.wait_variable(self.active_complex_key)
-                self.active_complex_key_frame[0].place_forget()
 
             else:
                 pass

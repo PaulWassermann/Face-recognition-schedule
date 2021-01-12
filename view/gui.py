@@ -20,8 +20,8 @@ class GUI:
         self.root = Tk()
 
         # We define the size of the app window relatively to the size of the screen that will display it
-        self.screen_width = self.root.winfo_screenwidth()
-        self.screen_height = self.root.winfo_screenheight()
+        self.screen_width = 4 * self.root.winfo_screenwidth() / 5
+        self.screen_height = 4 * self.root.winfo_screenheight() / 5
 
         self.width = self.screen_width
         self.height = self.screen_height
@@ -33,7 +33,7 @@ class GUI:
 
         # Disabling the resizable option as well as the top border
         self.root.resizable(width=False, height=False)
-        self.root.overrideredirect(boolean=True)  # set to False while debugging
+        self.root.overrideredirect(boolean=False)  # set to False while debugging
 
         # Loading students database as a dictionary
         self.database = {}
