@@ -20,8 +20,8 @@ class GUI:
         self.root = Tk()
 
         # We define the size of the app window relatively to the size of the screen that will display it
-        self.screen_width = 4 * self.root.winfo_screenwidth() / 5
-        self.screen_height = 4 * self.root.winfo_screenheight() / 5
+        self.screen_width = 4 * self.root.winfo_screenwidth() // 5
+        self.screen_height = 4 * self.root.winfo_screenheight() // 5
 
         self.width = self.screen_width
         self.height = self.screen_height
