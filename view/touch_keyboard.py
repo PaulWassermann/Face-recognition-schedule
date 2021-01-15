@@ -135,7 +135,7 @@ class TouchKeyboard(Frame):
             for capitalization in self.keyboard_frames[keyboard]:
                 self.keyboard_frames[keyboard][capitalization].place(x=0, y=0)
 
-        self.entry = None
+        self.widget = None
         self.active_keyboard = "1"
         self.capitalization = "upper"
         self.caps_lock = False
@@ -201,10 +201,7 @@ class TouchKeyboard(Frame):
                                     self.keyboard_frames[super_key][capitalization],
                                     image=self.key_images[super_key][capitalization][super_index][index],
                                     anchor="nw", bg="white", relief="flat",
-                                    command=lambda: [self.toggle_complex_key(only_if_active=True),
-                                                     self.entry.delete(self.entry.index("insert") - 1),
-                                                     self.toggle_shift(only_if_inactive=True)
-                                                     if self.entry.index("insert") == 0 else None],
+                                    command=self.backspace,
                                     repeatdelay=500,
                                     repeatinterval=100))
 
@@ -230,11 +227,7 @@ class TouchKeyboard(Frame):
                                     self.keyboard_frames[super_key][capitalization],
                                     image=self.key_images[super_key][capitalization][super_index][index],
                                     anchor="nw", bg="white", relief="flat",
-                                    command=lambda: [self.toggle_complex_key(only_if_active=True),
-                                                     self.entry.insert(self.entry.index("insert"), " ") if
-                                                     (len(self.entry.get()) > 0 and self.entry.get()[
-                                                         self.entry.index("insert") - 1] != " ")
-                                                     else None]))
+                                    command=self.spacebar))
 
                             elif key == "return":
                                 self.key_images[super_key][capitalization][super_index].append(
@@ -247,7 +240,7 @@ class TouchKeyboard(Frame):
                                     image=self.key_images[super_key][capitalization][super_index][index],
                                     anchor="nw", bg="white", relief="flat",
                                     command=lambda: [self.toggle_complex_key(only_if_active=True),
-                                                     self.entry.tk_focusNext().focus(), self.toggle_shift()]))
+                                                     self.widget.tk_focusNext().focus(), self.toggle_shift()]))
 
                             elif key == "":
                                 self.key_buttons[super_key][capitalization][super_index].append("")
@@ -263,8 +256,8 @@ class TouchKeyboard(Frame):
                                     image=self.key_images[super_key][capitalization][super_index][index],
                                     anchor="nw", bg="white", relief="flat",
                                     command=lambda i=super_key, j=capitalization, k=super_index,
-                                                   l=index: self.entry.insert(
-                                        self.entry.index("insert"),
+                                                   l=index: self.widget.insert(
+                                        self.widget.index("insert"),
                                         self.formatted_letter(self.keys[i][j][k][l]))))
 
                             if key != "":
@@ -301,8 +294,8 @@ class TouchKeyboard(Frame):
                                                             i=super_key,
                                                             j=capitalization,
                                                             k=super_index,
-                                                            l=index: [self.entry.insert(self.entry.index("insert"),
-                                                                                        self.formatted_letter(
+                                                            l=index: [self.widget.insert(self.widget.index("insert"),
+                                                                                         self.formatted_letter(
                                                                                             self.keys[i][j][k][l][0])),
                                                                       self.gui.root.after_cancel(
                                                                           self.id_after_complex_key)]
@@ -348,8 +341,8 @@ class TouchKeyboard(Frame):
                                                                    n=super_minor_index:
                                                     [self.active_complex_key.set(value=False),
                                                      self.active_complex_key_frame[0].place_forget(),
-                                                     self.entry.insert(
-                                                         self.entry.index("insert"),
+                                                     self.widget.insert(
+                                                         self.widget.index("insert"),
                                                          self.formatted_letter(self.keys[i][j][k][l][1][m][n]))])
 
                                     button.place(
@@ -376,7 +369,7 @@ class TouchKeyboard(Frame):
     def set_id_after_caps_lock(self, value=0):
         self.id_after_caps_lock = value
 
-    def toggle_caps_lock(self, only_if_true=False):
+    def toggle_caps_lock(self, only_if_active=False):
 
         if self.caps_lock:
             self.caps_lock = False
@@ -388,7 +381,7 @@ class TouchKeyboard(Frame):
                                                                                 self.key_images[super_key][
                                                                                     capitalization][3][0][0])
 
-        elif not self.caps_lock and not only_if_true:
+        elif not self.caps_lock and not only_if_active:
             self.caps_lock = True
             self.id_after_caps_lock = 1
             self.toggle_shift(only_if_inactive=True)
@@ -400,6 +393,51 @@ class TouchKeyboard(Frame):
                                                                                     capitalization][3][0][1])
 
         self.gui.root.update_idletasks()
+
+    def backspace(self):
+
+        self.toggle_complex_key(only_if_active=True)
+
+        if self.widget.winfo_class() == "Entry":
+
+            self.widget.delete(self.widget.index("insert") - 1)
+
+            if self.widget.index("insert") == 0:
+                self.toggle_shift(only_if_inactive=True)
+
+        elif self.widget.winfo_class() == "Text":
+
+            string = self.widget.index("insert").split(".")
+            index = ""
+
+            if string[1] != "0":
+                index = string[0] + "." + str(int(string[1]) - 1)
+
+            elif string[1] == "0":
+                index = str(int(string[0]) - 1) + "." + str(int(self.widget["width"]) - 1)
+
+            self.widget.delete(index)
+
+            if self.widget.index("insert") == "1.0":
+                self.toggle_shift(only_if_inactive=True)
+
+    def spacebar(self):
+
+        self.toggle_complex_key(only_if_active=True)
+
+        if self.widget.winfo_class() == "Entry":
+
+            if len(self.widget.get()) > 0 and self.widget.get()[self.widget.index("insert") - 1] != " ":
+                self.widget.insert(self.widget.index("insert"), " ")
+
+        elif self.widget.winfo_class() == "Text":
+
+            line = int(self.widget.index("insert").split(".")[0])
+            character = int(self.widget.index("insert").split(".")[1])
+            index = (line - 1) * int(self.widget["width"]) + character
+
+            if len(self.widget.get("1.0", "end")) > 0 and self.widget.get("1.0", "end")[index - 1] != " ":
+                self.widget.insert(self.widget.index("insert"), " ")
 
     def toggle_keyboards(self):
 
@@ -488,23 +526,48 @@ class TouchKeyboard(Frame):
                 self.active_complex_key.set(value=False)
                 self.active_complex_key_frame[0].place_forget()
 
+    def adjust_text_box(self):
+
+        self.widget["height"] = 1 + (len(self.widget.get("1.0", "end")) // (1 + int(self.widget["width"])))
+
     def display(self, event):
 
-        self.entry = event.widget
+        if event.widget.winfo_class() == "Entry":
 
-        if self.entry.index("insert") == 0 and len(self.entry.get()) == 0:
-            self.capitalization = "upper"
+            self.widget = event.widget
 
-        else:
-            self.capitalization = "lower"
+            if self.widget.index("insert") == 0 and len(self.widget.get()) == 0:
+                self.capitalization = "upper"
 
-        self.keyboard_frames[self.active_keyboard][self.capitalization].tkraise()
+            else:
+                self.capitalization = "lower"
 
-        self.tkraise()
+            self.keyboard_frames[self.active_keyboard][self.capitalization].tkraise()
+
+            self.tkraise()
+
+        elif event.widget.winfo_class() == "Text":
+
+            self.widget = event.widget
+            self.bind_all("<Button-1>", lambda e: self.adjust_text_box())
+
+            if self.widget.index("insert") == "0.0" and len(self.widget.get()) == 0:
+                self.capitalization = "upper"
+
+            else:
+                self.capitalization = "lower"
+
+            self.keyboard_frames[self.active_keyboard][self.capitalization].tkraise()
+
+            self.tkraise()
 
     def hide(self):
 
+        if self.widget is not None and self.widget.winfo_class() == "Text":
+            self.unbind_all("<Button-1>")
+
         self.toggle_complex_key(only_if_active=True)
+        self.toggle_caps_lock(only_if_active=True)
 
         self.active_keyboard = "1"
 

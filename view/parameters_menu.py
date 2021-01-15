@@ -15,6 +15,21 @@ class ParametersMenu(Canvas):
         self.background_id = self.create_image(0, 0, image=self.gui.global_background_image, anchor="nw")
         self.cm_logo_id = self.create_image(5, 5, image=self.gui.global_cm_logo_image, anchor="nw")
 
+        # Database Visualization button
+        self.database_visualisation_button = Button(self,
+                                                    text="Inspecter/modifier\nla base de données",
+                                                    font=('helvetica', 28),
+                                                    justify="center",
+                                                    fg="green", bg="white",
+                                                    activeforeground="green", activebackground="white",
+                                                    relief="flat",
+                                                    takefocus=False,
+                                                    command=lambda: [self.hide(),
+                                                                     self.gui.database_visualisation.display()])
+
+        self.database_visualisation_button.place(x=int(0.3 * self.gui.width), y=int(0.5 * self.gui.height),
+                                                 anchor="center")
+
         # Administrator registration button
         self.registration_button = Button(self, text="Enregistrer un\nnouvel administrateur", font=('helvetica', 28),
                                           justify="center",
@@ -26,7 +41,7 @@ class ParametersMenu(Canvas):
                                                            self.gui.administrator_log_in.toggle_admin_registration(),
                                                            self.gui.administrator_log_in.display()])
 
-        self.registration_button.place(x=int(0.5 * self.gui.width), y=int(0.5 * self.gui.height), anchor="center")
+        self.registration_button.place(x=int(0.7 * self.gui.width), y=int(0.5 * self.gui.height), anchor="center")
 
         # Quit button
         self.quit_button = Button(self, text="Fermer l'application", font=('helvetica', 28),

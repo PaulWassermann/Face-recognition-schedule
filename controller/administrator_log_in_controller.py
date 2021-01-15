@@ -30,12 +30,19 @@ class AdministratorLogInController:
                                                             state="normal")
 
         elif self.gui.administrator_log_in.admin_registration:
-            self.gui.admins[f"{encoded_username}"] = encoded_password
-            Log().write_log_info(message="Un compte administrateur pour l'utilisateur "
-                                         f"{self.gui.administrator_log_in.username_entry.get()} a été créé.")
-            self.gui.administrator_log_in.toggle_admin_registration()
-            self.gui.administrator_log_in.hide()
-            self.gui.parameters_menu.display()
+
+            try:
+                self.gui.admins[f"{encoded_username}"] = encoded_password
+                self.gui.administrator_log_in.toggle_admin_registration()
+                self.gui.administrator_log_in.hide()
+                self.gui.parameters_menu.display()
+
+            except:
+                Log.write_log_exception()
+
+            else:
+                Log().write_log_info(message="Un compte administrateur pour l'utilisateur "
+                                             f"{self.gui.administrator_log_in.username_entry.get()} a été créé.")
 
     def return_button_command(self):
 

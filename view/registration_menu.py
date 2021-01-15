@@ -2,6 +2,7 @@ from controller.registration_menu_controller import RegistrationMenuController
 from face_recognition import face_locations, face_encodings, compare_faces
 from view.round_button import RoundButton
 from model.student import Student
+from model.log import Log
 from PIL import ImageTk
 from time import time
 from tkinter import *
@@ -223,8 +224,8 @@ class RegistrationMenu(Canvas):
                                         lambda: [self.video_back_canvas.itemconfigure(self.timer_text,
                                                                                       text=" "),
                                                  self.reset_timer_0(),
-                                                 student_to_register.set_face_encoding(encoding=temporary_encoding),
-                                                 self.gui.root.after(1000, self.done.set(value=True))])
+                                                 self.register_student(student_to_register, temporary_encoding)
+                                                 ])
 
                                     self.set_timer = True
 
@@ -245,8 +246,17 @@ class RegistrationMenu(Canvas):
 
             self.gui.root.update()
 
-        student_to_register.dump_info()
         self.video_back_frame.place_forget()
+
+        # Disabling the validation button
+        self.validation_button["state"] = "disabled"
+
+        # Erasing the entries
+        for entry in [self.id_entry,
+                      self.first_name_entry,
+                      self.last_name_entry]:
+            entry.delete(0, "end")
+
         self.hide()
         self.gui.start_menu.display()
 
@@ -275,6 +285,25 @@ class RegistrationMenu(Canvas):
         if self.id_after_timer_0 != 0:
             self.gui.root.after_cancel(self.id_after_timer_0)
             self.reset_timer_0()
+
+    def register_student(self, student_to_register, encoding):
+
+        try:
+            student_to_register.set_face_encoding(encoding=encoding)
+            student_to_register.dump_info()
+
+        except:
+            Log().write_log_exception(level="error",
+                                      message=f"Un problème est survenu lors de "
+                                              f"l'enregistrement de {str(student_to_register)}",
+                                      show=True,
+                                      log=True)
+
+        else:
+            Log().write_log_info(f"L'étudiant.e {str(student_to_register)} a "
+                                f"bien été enregistré.e!", show=True)
+
+            self.gui.root.after(1000, self.done.set(value=True))
 
     def display(self):
 

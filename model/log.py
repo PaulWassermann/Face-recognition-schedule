@@ -46,7 +46,7 @@ class Log:
             logger.setLevel(logging.INFO)
 
             if self.new:
-                self.write_log_info("Log of the day was successfully created and initialized.")
+                self.write_log_info("The log of the day was successfully created and initialized.")
 
     def check_on_log_path(self):
 
@@ -65,9 +65,12 @@ class Log:
                                  "A problem occurred while checking if a path to the log exists and could "
                                  "not be logged.")
 
-    def write_log_info(self, message):
+    def write_log_info(self, message, show=False):
 
         logging.info(f"[{self.hour}:{self.minute}:{self.second}] Info   :  {message}")
+
+        if show:
+            messagebox.showinfo("Info", message)
 
     def write_log_exception(self, level="error", message="", show=True, log=False):
 

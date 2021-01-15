@@ -1,3 +1,4 @@
+from view.database_visualisation import DatabaseVisualisation
 from view.administrator_log_in import AdministratorLogIn
 from view.language_selection import LanguageSelection
 from view.registration_menu import RegistrationMenu
@@ -20,8 +21,8 @@ class GUI:
         self.root = Tk()
 
         # We define the size of the app window relatively to the size of the screen that will display it
-        self.screen_width = 4 * self.root.winfo_screenwidth() // 5
-        self.screen_height = 4 * self.root.winfo_screenheight() // 5
+        self.screen_width = self.root.winfo_screenwidth()
+        self.screen_height = self.root.winfo_screenheight()
 
         self.width = self.screen_width
         self.height = self.screen_height
@@ -33,7 +34,7 @@ class GUI:
 
         # Disabling the resizable option as well as the top border
         self.root.resizable(width=False, height=False)
-        self.root.overrideredirect(boolean=False)  # set to False while debugging
+        self.root.overrideredirect(boolean=True)  # set to False while debugging
 
         # Loading students database as a dictionary
         self.database = {}
@@ -91,6 +92,9 @@ class GUI:
         self.parameters_button_on_click = None
         self.return_button_image = None
         self.return_button_on_click_image = None
+        self.modify_text_button_image = None
+        self.validate_modification_button_image = None
+        self.cancel_modification_button_image = None
         self.language_assets = {}
 
         self.load_assets()
@@ -101,6 +105,7 @@ class GUI:
         self.recognition_menu = RecognitionMenu(self)
         self.parameters_menu = ParametersMenu(self)
         self.language_selection = LanguageSelection(self)
+        self.database_visualisation = DatabaseVisualisation(self)
         self.administrator_log_in = AdministratorLogIn(self)
 
         # Tactile Keyboard
@@ -117,7 +122,7 @@ class GUI:
 
         try:
 
-            with open("students.txt", 'r') as file:
+            with open("files/students.txt", 'r') as file:
                 self.database = json.load(file)
 
         except:
@@ -128,7 +133,7 @@ class GUI:
 
         try:
 
-            with open("administrators.txt", 'r') as file:
+            with open("files/administrators.txt", 'r') as file:
                 self.admins = json.load(file)
 
         except:
@@ -154,6 +159,11 @@ class GUI:
             self.parameters_button_on_click = ResizableImage(path_to_image="assets/parameters_button_on_click.png")
             self.return_button_image = ResizableImage(path_to_image="assets/return_button.png")
             self.return_button_on_click_image = ResizableImage(path_to_image="assets/return_button_on_click.png")
+            self.modify_text_button_image = ResizableImage(path_to_image="assets/modify_text.png")
+            self.validate_modification_button_image = ResizableImage(
+                path_to_image="assets/validate_modification_button.png")
+            self.cancel_modification_button_image = ResizableImage(
+                path_to_image="assets/cancel_modification_button.png")
 
             for language in self.text_resources.keys():
                 self.language_assets[language] = [
@@ -161,17 +171,18 @@ class GUI:
                     ResizableImage(path_to_image=f"assets/{language}_button_on_click.png")]
 
         except:
-            Log().write_log_exception(level="error", message="An error occurred while loading the assets.",
+            Log().write_log_exception(level="error", message="Une erreur est survenue lors du chargement des éléments "
+                                                             "visuels.",
                                       show=True, log=True)
 
     def close_app(self):
 
         try:
 
-            with open("students.txt", 'w') as file:
+            with open("files/students.txt", 'w') as file:
                 json.dump(self.database, file, sort_keys=True, indent=4)
 
-            with open("administrators.txt", 'w') as file:
+            with open("files/administrators.txt", 'w') as file:
                 json.dump(self.admins, file, sort_keys=True, indent=4)
 
         except:

@@ -88,6 +88,8 @@ class Student:
 
     def dump_info(self):
         self.gui.database[self.__id] = [self.__first_name, self.__last_name, self.__face_encoding]
+        self.gui.database = dict(sorted(self.gui.database.items()))
+        self.gui.database_visualisation.create_line(self.__id, self.__first_name, self.__last_name)
 
     def __eq__(self, student):
         return self.__id == student.get_id()
