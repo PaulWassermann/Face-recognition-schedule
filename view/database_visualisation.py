@@ -97,7 +97,7 @@ class DatabaseVisualisation(Canvas):
 
         self.button_dict[id_][0].pack(side="left", padx=10)
 
-    def modify_data(self, id_):
+    def modify_data(self, id_, after_validation=False):
 
         if id_ != self.active_modification_line:
 
@@ -119,15 +119,17 @@ class DatabaseVisualisation(Canvas):
         elif id_ == self.active_modification_line:
 
             for elem in self.text_dict[id_]:
-                try:
-                    if elem.edit_modified():
-                        elem.edit_undo()
-                except:
-                    pass
 
-                finally:
-                    elem.edit_modified(False)
-                    elem.edit_reset()
+                if not after_validation:
+                    try:
+                        if elem.edit_modified():
+                            elem.edit_undo()
+                    except:
+                        pass
+
+                    finally:
+                        elem.edit_modified(False)
+                        elem.edit_reset()
 
                 elem["state"] = "disabled"
 
@@ -160,7 +162,7 @@ class DatabaseVisualisation(Canvas):
         self.gui.database[self.active_modification_line][1] = \
             self.text_dict[self.active_modification_line][0].get("1.0", "end").strip("\n")
 
-        self.modify_data(self.active_modification_line)
+        self.modify_data(self.active_modification_line, after_validation=True)
 
     def cancel_modification(self):
         self.modify_data(self.active_modification_line)
