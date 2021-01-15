@@ -19,7 +19,7 @@ class StartMenuController:
     # Displays the administrator log in page
     def parameters_button_command(self):
         self.gui.start_menu.hide()
-        self.gui.parameters_menu.display()
+        self.gui.administrator_log_in.display()
 
     # Displays the language selection pop-up menu
     def language_selection_button_command(self):
