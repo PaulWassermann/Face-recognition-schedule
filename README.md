@@ -2,7 +2,7 @@
 
 ### Requirements
 
-The app can only be ran on Windows 10.
+The app can only be run on Windows 10.
 
 ### Installation
 
